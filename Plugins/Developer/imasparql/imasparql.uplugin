@@ -1,0 +1,24 @@
+{
+    "FileVersion": 3,
+    "Version": 1,
+    "VersionName": "1.0",
+    "FriendlyName": "imasparql",
+    "Description": "SPARQLing through BP.",
+    "Category": "imas",
+    "CreatedBy": "crssnky",
+    "CreatedByURL": "https://sparql.crssnky.xyz/imas/",
+    "DocsURL": "https://doc.crssnky.xyz/imasparql/",
+    "MarketplaceURL": "",
+    "SupportURL": "https://twitter.com/croMisa",
+    "EnabledByDefault": false,
+    "CanContainContent": false,
+    "IsBetaVersion": false,
+    "Installed": false,
+    "Modules": [
+        {
+            "Name": "imasparql",
+            "Type": "Runtime",
+            "LoadingPhase": "Default"
+        }
+    ]
+}
