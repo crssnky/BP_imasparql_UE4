@@ -1,8 +1,9 @@
-// Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
+﻿// Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
 #include "imasparql.h"
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
+//#include "JsonStructs.h"
 
 
 class Fimasparql: public Iimasparql

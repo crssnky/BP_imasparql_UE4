@@ -1,19 +1,19 @@
-{
-	"FileVersion": 3,
-	"EngineAssociation": "{79E6D8E2-4697-6A87-93EC-87B8B13DD0C3}",
-	"Category": "",
-	"Description": "",
-	"Modules": [
-		{
-			"Name": "BP_imasparql_UE4",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		}
-	],
-	"Plugins": [
-		{
-			"Name": "imasparql",
-			"Enabled": true
-		}
-	]
+﻿{
+    "FileVersion": 3,
+    "EngineAssociation": "{79E6D8E2-4697-6A87-93EC-87B8B13DD0C3}",
+    "Category": "",
+    "Description": "",
+    "Modules": [
+        {
+            "Name": "BP_imasparql_UE4",
+            "Type": "Runtime",
+            "LoadingPhase": "Default"
+        }
+    ],
+    "Plugins": [
+        {
+            "Name": "imasparql",
+            "Enabled": true
+        }
+    ]
 }
