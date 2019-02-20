@@ -1,0 +1,26 @@
+ include/cereal/details/traits.hpp | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/include/cereal/details/traits.hpp b/include/cereal/details/traits.hpp
+index 3390bbd..6efb0e7 100644
+--- a/include/cereal/details/traits.hpp
++++ b/include/cereal/details/traits.hpp
+@@ -1,4 +1,4 @@
+-/*! \file traits.hpp
++﻿/*! \file traits.hpp
+     \brief Internal type trait support
+     \ingroup Internal */
+ /*
+@@ -31,8 +31,12 @@
+ #define CEREAL_DETAILS_TRAITS_HPP_
+ 
+ #ifndef __clang__
++#ifdef __GNUC__
++#ifdef __GNUC_MINOR__
+ #if (__GNUC__ == 4 && __GNUC_MINOR__ <= 7)
+ #define CEREAL_OLDER_GCC
++#endif
++#endif
+ #endif // gcc 4.7 or earlier
+ #endif // __clang__
+ 
