@@ -1,7 +1,14 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "Math/TransformCalculus2D.h"	// For"cereal-UE4.hxx"
 #include "Serialization/JsonSerializerMacros.h"
+
+#include "cereal/cereal.hpp"
+#include "cereal/archives/json.hpp"
+#include "cereal-UE4.hxx"
+#include <sstream>
+
 #include "imasparqlJsonStructs.generated.h"
 
 
@@ -156,6 +163,62 @@ struct FTalent:FJsonSerializable{
 		FTalent():talent(""){}
 };
 
+struct FJsonString:FJsonSerializable{
+	FString string;
+	BEGIN_JSON_SERIALIZER
+		JSON_SERIALIZE("string", string);
+	END_JSON_SERIALIZER
+		FJsonString():string(""){}
+};
+struct Fbinding:FJsonSerializable{
+	FString predicate;
+	FString object;
+	BEGIN_JSON_SERIALIZER
+		JSON_SERIALIZE("predicate", predicate);
+	JSON_SERIALIZE("object", object);
+	END_JSON_SERIALIZER
+		Fbinding():predicate(""), object(""){}
+};
+struct Fresults:FJsonSerializable{
+	TArray<Fbinding> binding;
+	BEGIN_JSON_SERIALIZER
+		JSON_SERIALIZE_ARRAY_SERIALIZABLE("binding", binding, Fbinding);
+	END_JSON_SERIALIZER
+		Fresults():binding(){}
+};
+struct Fvars:FJsonSerializable{
+	TArray<FJsonString> var;
+	BEGIN_JSON_SERIALIZER
+		JSON_SERIALIZE_ARRAY_SERIALIZABLE("var", var, FJsonString);
+	END_JSON_SERIALIZER
+		Fvars():var(){}
+	struct Fbinding:FJsonSerializable{
+		FString predicate;
+		FString object;
+		BEGIN_JSON_SERIALIZER
+			JSON_SERIALIZE("predicate", predicate);
+		JSON_SERIALIZE("object", object);
+		END_JSON_SERIALIZER
+			Fbinding():predicate(""), object(""){}
+	};
+};
+struct Fhead:FJsonSerializable{
+	TArray<Fresults> result;
+	TArray<Fvars> vars;
+	BEGIN_JSON_SERIALIZER
+		JSON_SERIALIZE_ARRAY_SERIALIZABLE("binding", result, Fresults);
+	JSON_SERIALIZE_ARRAY_SERIALIZABLE("vars", vars, Fvars);
+	END_JSON_SERIALIZER
+		Fhead():result(), vars(){}
+};
+struct Froot:FJsonSerializable{
+	TArray<Fhead> head;
+	BEGIN_JSON_SERIALIZER
+		JSON_SERIALIZE_ARRAY_SERIALIZABLE("", head, Fhead);
+	END_JSON_SERIALIZER
+		Froot():head(){}
+};
+
 struct FIdolJson:public FJsonSerializable{
 	FString alternateName;
 	FString birthDate;
@@ -261,7 +324,6 @@ struct FIdolJson:public FJsonSerializable{
 USTRUCT(BlueprintType)
 struct FIdol{
 	GENERATED_BODY()
-
 		UPROPERTY(BlueprintReadWrite, Category = "imasparql")
 		FString alternateName;
 	UPROPERTY(BlueprintReadWrite, Category = "imasparql")
@@ -357,5 +419,117 @@ struct FIdol{
 		cv(""),
 		familyNameKana(""),
 		givenNameKana(""),
-		nameKana(""){}
+		nameKana(""),
+		hobby(),
+		favorite(),
+		talent(),
+		memberOf(),
+		own(){}
+
+	FIdol operator=(const FIdolJson& in){
+		this->age = in.age;
+		this->alternateName = in.alternateName;
+		this->alternateNameKana = in.alternateNameKana;
+		this->attribute = in.attribute;
+		this->birthDate = in.birthDate;
+		this->birthPlace = in.birthPlace;
+		this->bloodType = in.bloodType;
+		this->bust = in.bust;
+		this->category = in.category;
+		this->color = in.color;
+		this->constellation = in.constellation;
+		this->cv = in.cv;
+		this->description = in.description;
+		this->division = in.division;
+		this->familyName = in.familyName;
+		this->familyNameKana = in.familyNameKana;
+		for(auto i : in.favorite){ this->favorite.Emplace(i.favorite); }
+		this->gender = in.gender;
+		this->givenName = in.givenName;
+		this->givenNameKana = in.givenNameKana;
+		this->handedness = in.handedness;
+		this->height = in.height;
+		this->hip = in.hip;
+		for(auto i : in.hobby){ this->hobby.Emplace(i.hobby); }
+		for(auto i : in.memberOf){ this->memberOf.Emplace(i.memberOf); }
+		this->name = in.name;
+		this->nameKana = in.nameKana;
+		for(auto i : in.own){ this->own.Emplace(i.own); }
+		this->shoeSize = in.shoeSize;
+		for(auto i : in.talent){ this->talent.Emplace(i.talent); }
+		this->title = in.title;
+		this->waist = in.waist;
+		this->weight = in.weight;
+
+		return *this;
+	}
 };
+
+USTRUCT(BlueprintType)
+struct FimasparqlResultUnit{
+	GENERATED_BODY()
+		UPROPERTY(BlueprintReadWrite, Category = "imasparql")
+		FString type;
+	UPROPERTY(BlueprintReadWrite, Category = "imasparql")
+		FString datatype;
+	UPROPERTY(BlueprintReadWrite, Category = "imasparql")
+		FString xml_lang;
+	UPROPERTY(BlueprintReadWrite, Category = "imasparql")
+		FString value;
+};
+template<typename T>
+void serialize(T& a, FimasparqlResultUnit& in){
+	a(
+		cereal::make_nvp("type", in.type),
+		cereal::make_nvp("datatype", in.datatype),
+		cereal::make_nvp("xml:lang", in.xml_lang),
+		cereal::make_nvp("value", in.value)
+	);
+}
+USTRUCT(BlueprintType)
+struct FimasparqlBinding{
+	GENERATED_BODY()
+		UPROPERTY(BlueprintReadWrite, Category = "imasparql")
+		FimasparqlResultUnit predicate;
+	UPROPERTY(BlueprintReadWrite, Category = "imasparql")
+		FimasparqlResultUnit object;
+};
+template<typename T>
+void serialize(T& a, FimasparqlBinding& in){
+	a(
+		cereal::make_nvp("predicate", in.predicate),
+		cereal::make_nvp("object", in.object)
+	);
+}
+USTRUCT(BlueprintType)
+struct FimasparqlBindings{
+	GENERATED_BODY()
+		UPROPERTY(BlueprintReadWrite, Category = "imasparql")
+		TArray<FimasparqlBinding> binding;
+};
+template<typename T>
+void serialize(T& a, FimasparqlBindings& in){
+	a(
+		cereal::make_nvp("binding", in.binding)
+	);
+}
+USTRUCT(BlueprintType)
+struct FimasparqlHead{
+	GENERATED_BODY()
+		UPROPERTY(BlueprintReadWrite, Category = "imasparql")
+		TArray<FString> vars;
+};
+template<typename T>
+void serialize(T& a, FimasparqlHead& in){
+	a(cereal::make_nvp("vars", in.vars));
+}
+USTRUCT(BlueprintType)
+struct FimasparqlResult{
+	GENERATED_BODY()
+		UPROPERTY(BlueprintReadWrite, Category = "imasparql")
+		FimasparqlBindings bindings;
+};
+template<typename T>
+void serialize(T& a, FimasparqlResult& in){
+	a(cereal::make_nvp("bindings", in.bindings));
+}

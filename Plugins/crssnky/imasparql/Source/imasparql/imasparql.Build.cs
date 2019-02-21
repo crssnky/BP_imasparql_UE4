@@ -1,9 +1,12 @@
 ﻿// Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
+using System.IO;
+
 namespace UnrealBuildTool.Rules {
 	public class imasparql : ModuleRules {
 		public imasparql(ReadOnlyTargetRules Target) : base(Target) {
 			PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+
 			PublicIncludePaths.AddRange(
 				new string[] {
 					// ... add public include paths required here ...
@@ -41,6 +44,13 @@ namespace UnrealBuildTool.Rules {
 					// ... add any modules that your module loads dynamically here ...
 				}
 				);
+
+			// cereal
+			var base_path = Path.GetDirectoryName(RulesCompiler.GetFileNameFromType(GetType()));
+			string third_party_path = Path.Combine(base_path, "..", "..", "Thirdparty");
+			PublicIncludePaths.Add(Path.Combine(third_party_path, "cereal", "include"));
+			PublicIncludePaths.Add(Path.Combine(third_party_path, "cereal-UE4", "include"));
+
 		}
 	}
 }
