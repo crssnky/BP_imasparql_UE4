@@ -3,8 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-//#include "GameFramework/Actor.h"
-#include "Kismet/BlueprintFunctionLibrary.h"
+#include "GameFramework/Actor.h"
 #include "Http.h"
 #include "HttpManager.h"
 
@@ -15,7 +14,7 @@
  *
  */
 UCLASS(Blueprintable, BlueprintType)
-class IMASPARQL_API UimasparqlBP: public UBlueprintFunctionLibrary{
+class IMASPARQL_API AimasparqlBP: public AActor{
 	GENERATED_BODY()
 
 public:
@@ -25,18 +24,15 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "imasparql")
 		static FIdol CreateIdol();
 
-	//UFUNCTION(BlueprintCallable, BlueprintPure, Category = "imasparql")
-	//	static FIdol GetIdolData(FString name);
-
 	UFUNCTION(BlueprintCallable, Category = "imasparql")
 		FIdol GetIdolData(FString name);
 
 	UFUNCTION(BlueprintCallable, Category = "imasparql")
-		static UimasparqlBP* GetImasparqlBP();
+		static AimasparqlBP* GetImasparqlBP();
 
-	//UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "imasparql")
-	//	void OnRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "imasparql")
+		void OnGetIdolData(const FIdol& idol);
 
 private:
-	void OnComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnCompleteGetIdolData(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 };
