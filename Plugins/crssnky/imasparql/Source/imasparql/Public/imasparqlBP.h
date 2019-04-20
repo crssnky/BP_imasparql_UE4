@@ -18,21 +18,20 @@ class AimasparqlBP: public AActor{
 	GENERATED_BODY()
 
 public:
-	//UFUNCTION(BlueprintCallable, BlueprintPure, Category = "imasparql")
-	//	static FString HelloWorld();
-
-	//UFUNCTION(BlueprintCallable, BlueprintPure, Category = "imasparql")
-	//	static FIdol CreateIdol();
 
 	UFUNCTION(BlueprintCallable, Category = "imasparql")
 		void GetIdolData(FString name);
 
-	//UFUNCTION(BlueprintCallable, Category = "imasparql")
-	//	static AimasparqlBP* GetImasparqlBP();
+	UFUNCTION(BlueprintCallable, Category = "imasparql")
+		void GetVoteData();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "imasparql")
 		void OnGetIdolData(const FIdol& idol);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "imasparql")
+		void OnGetVoteData(const TArray<FVote>& idol);
+
 private:
 	void OnCompleteGetIdolData(FHttpRequestPtr req, FHttpResponsePtr res, bool bSuccess);
+	void OnCompleteGetVoteData(FHttpRequestPtr req, FHttpResponsePtr res, bool bSuccess);
 };
