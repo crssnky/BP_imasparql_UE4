@@ -4,3 +4,9 @@
 [submodule ".\\Plugins\\crssnky\\imasparql\\Thirdparty\\cereal"]
 	path = .\\Plugins\\crssnky\\imasparql\\Thirdparty\\cereal
 	url = https://github.com/USCiLab/cereal.git
+[submodule "Plugins/crssnky/imasparql/Thirdparty/cereal"]
+	path = Plugins/crssnky/imasparql/Thirdparty/cereal
+	url = https://github.com/USCiLab/cereal.git
+[submodule "Plugins/crssnky/imasparql/Thirdparty/cereal-UE4"]
+	path = Plugins/crssnky/imasparql/Thirdparty/cereal-UE4
+	url = https://github.com/usagi/cereal-UE4.git
