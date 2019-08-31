@@ -79,4 +79,4 @@ DerivedDataCache/*
 /Plugins/*/*/Intermediate/*
 
 # ThridParty
-/Plugins/*/*/Thirdparty/*
+#/Plugins/*/*/Thirdparty/*
