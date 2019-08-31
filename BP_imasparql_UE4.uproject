@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{79E6D8E2-4697-6A87-93EC-87B8B13DD0C3}",
+	"EngineAssociation": "4.23",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -21,6 +21,18 @@
 		},
 		{
 			"Name": "Niagara",
+			"Enabled": true
+		},
+		{
+			"Name": "ChaosEditor",
+			"Enabled": true
+		},
+		{
+			"Name": "ChaosSolverPlugin",
+			"Enabled": true
+		},
+		{
+			"Name": "ChaosNiagara",
 			"Enabled": true
 		}
 	]

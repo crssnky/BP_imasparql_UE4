@@ -6,6 +6,7 @@ namespace UnrealBuildTool.Rules {
 	public class imasparql : ModuleRules {
 		public imasparql(ReadOnlyTargetRules Target) : base(Target) {
 			PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+			bUseRTTI = true;
 
 			PublicIncludePaths.AddRange(
 				new string[] {
