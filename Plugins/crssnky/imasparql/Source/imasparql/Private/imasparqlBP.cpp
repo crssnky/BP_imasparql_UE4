@@ -1,8 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "cereal/archives/json.hpp"
+#include "Math/TransformCalculus2D.h"	// For"cereal-UE4.hxx"
+#include "cereal-UE4.hxx"
 #include "imasparqlBP.h"
 
-#include "cereal/archives/json.hpp"
 
 void AimasparqlBP::GetIdolData(FString name) {
 	auto& http = FHttpModule::Get();

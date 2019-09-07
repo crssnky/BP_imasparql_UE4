@@ -3,8 +3,6 @@
 #include "CoreMinimal.h"
 #include "cerealWrapper.h"
 #include <sstream>
-#include "Math/TransformCalculus2D.h"	// For"cereal-UE4.hxx"
-#include "cereal-UE4.hxx"
 
 #include "imasparqlJsonStructs.generated.h"
 
