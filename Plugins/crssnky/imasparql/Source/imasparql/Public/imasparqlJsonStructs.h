@@ -1,26 +1,24 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
-#include "Math/TransformCalculus2D.h"	// For"cereal-UE4.hxx"
-
-#include "cereal/cereal.hpp"
-#include "cereal/archives/json.hpp"
-#include "cereal-UE4.hxx"
+#include "cerealWrapper.h"
 #include <sstream>
+#include "Math/TransformCalculus2D.h"	// For"cereal-UE4.hxx"
+#include "cereal-UE4.hxx"
 
 #include "imasparqlJsonStructs.generated.h"
 
-
 template<class A, class T>
-static void OptionalField(A &a, const std::string &name, T &t){
-	try{
-		a(cereal::make_nvp(name, t));
-	} catch(std::exception &e){
+static void OptionalField(A& a, const std::string& name, T& t) {
+	try {
+		a(FcerealWrapper::make_nvp(name, t));
+	}
+	catch (std::exception& e) {
 		(void)e;
 	}
 }
 USTRUCT(BlueprintType)
-struct FimasparqlResultUnit{
+struct FimasparqlResultUnit {
 	GENERATED_BODY()
 		UPROPERTY(BlueprintReadWrite, Category = "imasparql")
 		FString type;
@@ -32,18 +30,18 @@ struct FimasparqlResultUnit{
 		FString value;
 };
 template<typename T>
-void serialize(T& a, FimasparqlResultUnit& in){
+void serialize(T& a, FimasparqlResultUnit& in) {
 	OptionalField(a, "datatype", in.datatype);
 	OptionalField(a, "xml:lang", in.xml_lang);
 	a(
-		cereal::make_nvp("type", in.type),
-		//cereal::make_nvp("datatype", in.datatype),
-		//cereal::make_nvp("xml:lang", in.xml_lang),
-		cereal::make_nvp("value", in.value)
+		FcerealWrapper::make_nvp("type", in.type),
+		//FcerealWrapper::make_nvp("datatype", in.datatype),
+		//FcerealWrapper::make_nvp("xml:lang", in.xml_lang),
+		FcerealWrapper::make_nvp("value", in.value)
 	);
 }
 USTRUCT(BlueprintType)
-struct FimasparqlBindings{
+struct FimasparqlBindings {
 	GENERATED_BODY()
 		UPROPERTY(BlueprintReadWrite, Category = "imasparql")
 		FimasparqlResultUnit predicate;
@@ -51,40 +49,40 @@ struct FimasparqlBindings{
 		FimasparqlResultUnit object;
 };
 template<typename T>
-void serialize(T& a, FimasparqlBindings& in){
+void serialize(T& a, FimasparqlBindings& in) {
 	a(
-		cereal::make_nvp("predicate", in.predicate),
-		cereal::make_nvp("object", in.object)
+		FcerealWrapper::make_nvp("predicate", in.predicate),
+		FcerealWrapper::make_nvp("object", in.object)
 	);
 }
 USTRUCT(BlueprintType)
-struct FimasparqlResult{
+struct FimasparqlResult {
 	GENERATED_BODY()
 		UPROPERTY(BlueprintReadWrite, Category = "imasparql")
 		TArray<FimasparqlBindings> bindings;
 };
 template<typename T>
-void serialize(T& a, FimasparqlResult& in){
+void serialize(T& a, FimasparqlResult& in) {
 	a(
-		cereal::make_nvp("bindings", in.bindings)
+		FcerealWrapper::make_nvp("bindings", in.bindings)
 	);
 }
 USTRUCT(BlueprintType)
-struct FimasparqlHead{
+struct FimasparqlHead {
 	GENERATED_BODY()
 		UPROPERTY(BlueprintReadWrite, Category = "imasparql")
 		TArray<FString> vars;
 };
 template<typename T>
-void serialize(T& a, FimasparqlHead& in){
+void serialize(T& a, FimasparqlHead& in) {
 	a(
-		cereal::make_nvp("vars", in.vars)
+		FcerealWrapper::make_nvp("vars", in.vars)
 	);
 }
 
 
 USTRUCT(BlueprintType)
-struct FIdol{
+struct FIdol {
 	GENERATED_BODY()
 		UPROPERTY(BlueprintReadWrite, Category = "imasparql")
 		FString alternateName;
@@ -155,7 +153,7 @@ struct FIdol{
 	UPROPERTY(BlueprintReadWrite, Category = "imasparql")
 		FString nameKana;
 
-	FIdol():
+	FIdol() :
 		alternateName(""),
 		birthDate(""),
 		birthPlace(""),
@@ -188,8 +186,8 @@ struct FIdol{
 		cv(""),
 		familyNameKana(""),
 		givenNameKana(""),
-		nameKana(""){}
-	FIdol(const FimasparqlResult& in):
+		nameKana("") {}
+	FIdol(const FimasparqlResult& in) :
 		alternateName(""),
 		birthDate(""),
 		birthPlace(""),
@@ -222,98 +220,132 @@ struct FIdol{
 		cv(""),
 		familyNameKana(""),
 		givenNameKana(""),
-		nameKana(""){
+		nameKana("") {
 		(*this) = in;
 	}
 
-	FIdol operator=(const FimasparqlResult& in){
+	FIdol operator=(const FimasparqlResult& in) {
 		auto& out = *this;
 
 		// check IsIdol
-		const FimasparqlBindings* type = in.bindings.FindByPredicate([](const FimasparqlBindings& i){
+		const FimasparqlBindings* type = in.bindings.FindByPredicate([](const FimasparqlBindings& i) {
 			return i.predicate.value == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
-		});
-		if(nullptr == type){
+			});
+		if (nullptr == type) {
 			UE_LOG(LogTemp, Warning, TEXT("It's not Idol info."));
 			return out;
-		} else if(type->object.value != "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Idol"){
+		}
+		else if (type->object.value != "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Idol") {
 			UE_LOG(LogTemp, Warning, TEXT("It's not Idol info."));
 			return out;
 		}
 
 		// Get info
-		for(auto building : in.bindings){
+		for (auto building : in.bindings) {
 			auto& object = building.object.value;
 			auto& predicate = building.predicate.value;
 
-			if(predicate == "http://schema.org/alternateName"){
+			if (predicate == "http://schema.org/alternateName") {
 				out.alternateName = object;
-			} else if(predicate == "http://schema.org/birthDate"){
+			}
+			else if (predicate == "http://schema.org/birthDate") {
 				out.birthDate = object;
-			} else if(predicate == "http://schema.org/birthPlace"){
+			}
+			else if (predicate == "http://schema.org/birthPlace") {
 				out.birthPlace = object;
-			} else if(predicate == "http://schema.org/description"){
+			}
+			else if (predicate == "http://schema.org/description") {
 				out.description = object;
-			} else if(predicate == "http://schema.org/familyName"){
+			}
+			else if (predicate == "http://schema.org/familyName") {
 				out.familyName = object;
-			} else if(predicate == "http://schema.org/gender"){
+			}
+			else if (predicate == "http://schema.org/gender") {
 				out.gender = object;
-			} else if(predicate == "http://schema.org/givenName"){
+			}
+			else if (predicate == "http://schema.org/givenName") {
 				out.givenName = object;
-			} else if(predicate == "http://schema.org/height"){
+			}
+			else if (predicate == "http://schema.org/height") {
 				out.height = FCString::Atof(*object);
-			} else if(predicate == "http://schema.org/memberOf"){
+			}
+			else if (predicate == "http://schema.org/memberOf") {
 				out.memberOf.Emplace(object);
-			} else if(predicate == "http://schema.org/name"){
+			}
+			else if (predicate == "http://schema.org/name") {
 				out.name = object;
-			} else if(predicate == "http://schema.org/owns"){
+			}
+			else if (predicate == "http://schema.org/owns") {
 				out.own.Emplace(object);
-			} else if(predicate == "http://schema.org/weight"){
+			}
+			else if (predicate == "http://schema.org/weight") {
 				out.weight = FCString::Atof(*object);
-			} else if(predicate == "http://xmlns.com/foaf/0.1/age"){
+			}
+			else if (predicate == "http://xmlns.com/foaf/0.1/age") {
 				out.age = FCString::Atoi(*object);
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Attribute"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Attribute") {
 				out.attribute = object;
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#bloodType"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#bloodType") {
 				out.bloodType = object;
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Bust"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Bust") {
 				out.bust = FCString::Atof(*object);
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Category"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Category") {
 				out.category = object;
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Color"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Color") {
 				out.color = object;
 				out.color2 = FColor::FromHex(out.color);
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Constellation"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Constellation") {
 				out.constellation = object;
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Division"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Division") {
 				out.division = object;
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Favorite"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Favorite") {
 				out.favorite.Emplace(object);
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Handedness"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Handedness") {
 				out.handedness = object;
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Hip"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Hip") {
 				out.hip = FCString::Atof(*object);
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Hobby"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Hobby") {
 				out.hobby.Emplace(object);
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#ShoeSize"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#ShoeSize") {
 				out.shoeSize = FCString::Atof(*object);
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Talent"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Talent") {
 				out.talent.Emplace(object);
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Title"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Title") {
 				out.title = object;
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Waist"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#Waist") {
 				out.waist = FCString::Atof(*object);
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#alternateNameKana"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#alternateNameKana") {
 				out.alternateNameKana = object;
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#cv"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#cv") {
 				out.cv = object;
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#familyNameKana"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#familyNameKana") {
 				out.familyNameKana = object;
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#givenNameKana"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#givenNameKana") {
 				out.givenNameKana = object;
-			} else if(predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#nameKana"){
+			}
+			else if (predicate == "https://sparql.crssnky.xyz/imasrdf/URIs/imas-schema.ttl#nameKana") {
 				out.nameKana = object;
-			} else{
+			}
+			else {
 				UE_LOG(LogTemp, Warning, TEXT("unknown predicate : %s"), *predicate);
 			}
 		}

@@ -18,7 +18,12 @@
         {
             "Name": "imasparql",
             "Type": "Runtime",
-            "LoadingPhase": "Default"
+            "LoadingPhase": "PostEngineInit"
+        },
+        {
+            "Name": "cerealWrapper",
+            "Type": "RuntimeNoCommandlet",
+            "LoadingPhase": "PostEngineInit"
         }
     ]
 }

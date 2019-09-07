@@ -1,4 +1,4 @@
-﻿// Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 using System.IO;
 
@@ -6,7 +6,7 @@ namespace UnrealBuildTool.Rules {
 	public class imasparql : ModuleRules {
 		public imasparql(ReadOnlyTargetRules Target) : base(Target) {
 			PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-			bUseRTTI = true;
+			bUseRTTI = false;
 
 			PublicIncludePaths.AddRange(
 				new string[] {
@@ -27,7 +27,6 @@ namespace UnrealBuildTool.Rules {
 					"CoreUObject",
 					"Engine",
 					// ... add other public dependencies that you statically link with here ...
-					"Json",
 					"Http",
 				}
 				);
@@ -36,6 +35,7 @@ namespace UnrealBuildTool.Rules {
 				new string[]
 				{
 					// ... add private dependencies that you statically link with here ...
+					"cerealWrapper"
 				}
 				);
 
@@ -49,9 +49,8 @@ namespace UnrealBuildTool.Rules {
 			// cereal
 			var base_path = Path.GetDirectoryName(RulesCompiler.GetFileNameFromType(GetType()));
 			string third_party_path = Path.Combine(base_path, "..", "..", "Thirdparty");
-			PublicIncludePaths.Add(Path.Combine(third_party_path, "cereal", "include"));
-			PublicIncludePaths.Add(Path.Combine(third_party_path, "cereal-UE4", "include"));
-
+			PrivateIncludePaths.Add(Path.Combine(third_party_path, "cereal", "include"));
+			PrivateIncludePaths.Add(Path.Combine(third_party_path, "cereal-UE4", "include"));
 		}
 	}
 }

@@ -1,16 +1,10 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "imasparqlBP.h"
 
-//FString AimasparqlBP::HelloWorld(){
-//	return "Hello im@sparql.";
-//}
-//
-//FIdol AimasparqlBP::CreateIdol(){
-//	return FIdol();
-//}
+#include "cereal/archives/json.hpp"
 
-void AimasparqlBP::GetIdolData(FString name){
+void AimasparqlBP::GetIdolData(FString name) {
 	auto& http = FHttpModule::Get();
 	TSharedRef<IHttpRequest> request = http.CreateRequest();
 	request->OnProcessRequestComplete().BindUObject(this, &AimasparqlBP::OnCompleteGetIdolData);
@@ -27,19 +21,16 @@ force-accept=text%2Fplain&query=select%20distinct%20%3fpredicate\
 	manager.AddRequest(request);
 }
 
-//AimasparqlBP* AimasparqlBP::GetImasparqlBP(){
-//	return NewObject<AimasparqlBP>();
-//}
-
-void AimasparqlBP::OnCompleteGetIdolData(FHttpRequestPtr req, FHttpResponsePtr res, bool bSuccess){
+void AimasparqlBP::OnCompleteGetIdolData(FHttpRequestPtr req, FHttpResponsePtr res, bool bSuccess) {
 	auto& http = FHttpModule::Get();
 	auto& manager = http.GetHttpManager();
 
-	if(!bSuccess){
+	if (!bSuccess) {
 		UE_LOG(LogTemp, Warning, TEXT("No Response."));
-	} else{
+	}
+	else {
 		auto txt = res->GetContentAsString();
-		if(!txt.Left(1).Contains("{")){
+		if (!txt.Left(1).Contains("{")) {
 			UE_LOG(LogTemp, Warning, TEXT("ERROR in response. Query is wrong."));
 			return;
 		}
