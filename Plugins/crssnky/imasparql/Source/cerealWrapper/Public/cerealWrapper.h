@@ -7,25 +7,15 @@
 namespace cereal {
 	template<typename T>
 	class NameValuePair;
-
-	template<typename T>
-	NameValuePair<T> make_nvp(const char* name, T&& value);
-	template<typename T>
-	NameValuePair<T> make_nvp(std::string const& name, T&& value);
 }
+struct FimasparqlHead;
+struct FimasparqlResult;
 
-class CEREALWRAPPER_API FcerealWrapper {
-public:
-	template <typename T>
-	static cereal::NameValuePair<T> make_nvp(const char* name, T&& value)
-	{
-		return cereal::make_nvp(name, value);
-	}
-	template <typename T>
-	static cereal::NameValuePair<T> make_nvp(std::string const& name, T&& value)
-	{
-		return cereal::make_nvp(name, value);
-	}
-};
-
+template <typename T>
+CEREALWRAPPER_API cereal::NameValuePair<T> make_nvp(const char* name, T&& value);
+template <typename T>
+CEREALWRAPPER_API cereal::NameValuePair<T> make_nvp(std::string const& name, T&& value);
+//template <typename T, typename U>
+//CEREALWRAPPER_API  void createJSONInputArchive(std::stringstream& arg, T& t, U& u);
+CEREALWRAPPER_API  void createJSONInputArchive(std::stringstream& arg, FimasparqlHead& t, FimasparqlResult& u);
 

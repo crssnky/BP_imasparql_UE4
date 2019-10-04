@@ -2,9 +2,12 @@
 
 using System.IO;
 
-namespace UnrealBuildTool.Rules {
-	public class imasparql : ModuleRules {
-		public imasparql(ReadOnlyTargetRules Target) : base(Target) {
+namespace UnrealBuildTool.Rules
+{
+	public class imasparql : ModuleRules
+	{
+		public imasparql(ReadOnlyTargetRules Target) : base(Target)
+		{
 			PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 			bUseRTTI = false;
 
@@ -45,12 +48,6 @@ namespace UnrealBuildTool.Rules {
 					// ... add any modules that your module loads dynamically here ...
 				}
 				);
-
-			// cereal
-			var base_path = Path.GetDirectoryName(RulesCompiler.GetFileNameFromType(GetType()));
-			string third_party_path = Path.Combine(base_path, "..", "..", "Thirdparty");
-			PrivateIncludePaths.Add(Path.Combine(third_party_path, "cereal", "include"));
-			PrivateIncludePaths.Add(Path.Combine(third_party_path, "cereal-UE4", "include"));
 		}
 	}
 }

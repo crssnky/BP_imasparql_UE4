@@ -2,14 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "cerealWrapper.h"
-#include <sstream>
 
 #include "imasparqlJsonStructs.generated.h"
 
 template<class A, class T>
 static void OptionalField(A& a, const std::string& name, T& t) {
 	try {
-		a(FcerealWrapper::make_nvp(name, t));
+		a(make_nvp(name, t));
 	}
 	catch (std::exception& e) {
 		(void)e;
@@ -32,10 +31,10 @@ void serialize(T& a, FimasparqlResultUnit& in) {
 	OptionalField(a, "datatype", in.datatype);
 	OptionalField(a, "xml:lang", in.xml_lang);
 	a(
-		FcerealWrapper::make_nvp("type", in.type),
-		//FcerealWrapper::make_nvp("datatype", in.datatype),
-		//FcerealWrapper::make_nvp("xml:lang", in.xml_lang),
-		FcerealWrapper::make_nvp("value", in.value)
+		make_nvp("type", in.type),
+		//make_nvp("datatype", in.datatype),
+		//make_nvp("xml:lang", in.xml_lang),
+		make_nvp("value", in.value)
 	);
 }
 USTRUCT(BlueprintType)
@@ -49,8 +48,8 @@ struct FimasparqlBindings {
 template<typename T>
 void serialize(T& a, FimasparqlBindings& in) {
 	a(
-		FcerealWrapper::make_nvp("predicate", in.predicate),
-		FcerealWrapper::make_nvp("object", in.object)
+		make_nvp("predicate", in.predicate),
+		make_nvp("object", in.object)
 	);
 }
 USTRUCT(BlueprintType)
@@ -62,7 +61,7 @@ struct FimasparqlResult {
 template<typename T>
 void serialize(T& a, FimasparqlResult& in) {
 	a(
-		FcerealWrapper::make_nvp("bindings", in.bindings)
+		make_nvp("bindings", in.bindings)
 	);
 }
 USTRUCT(BlueprintType)
@@ -74,7 +73,7 @@ struct FimasparqlHead {
 template<typename T>
 void serialize(T& a, FimasparqlHead& in) {
 	a(
-		FcerealWrapper::make_nvp("vars", in.vars)
+		make_nvp("vars", in.vars)
 	);
 }
 

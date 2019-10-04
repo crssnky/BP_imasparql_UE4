@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -10,6 +10,7 @@
 #include "imasparqlJsonStructs.h"
 
 #include "imasparqlBP.generated.h"
+
 /**
  *
  */
@@ -18,17 +19,8 @@ class AimasparqlBP: public AActor{
 	GENERATED_BODY()
 
 public:
-	//UFUNCTION(BlueprintCallable, BlueprintPure, Category = "imasparql")
-	//	static FString HelloWorld();
-
-	//UFUNCTION(BlueprintCallable, BlueprintPure, Category = "imasparql")
-	//	static FIdol CreateIdol();
-
 	UFUNCTION(BlueprintCallable, Category = "imasparql")
 		void GetIdolData(FString name);
-
-	//UFUNCTION(BlueprintCallable, Category = "imasparql")
-	//	static AimasparqlBP* GetImasparqlBP();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "imasparql")
 		void OnGetIdolData(const FIdol& idol);

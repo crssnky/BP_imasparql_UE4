@@ -15,15 +15,15 @@
     "IsBetaVersion": false,
     "Installed": false,
     "Modules": [
-        {
-            "Name": "imasparql",
-            "Type": "Runtime",
-            "LoadingPhase": "PostEngineInit"
-        },
-        {
-            "Name": "cerealWrapper",
-            "Type": "RuntimeNoCommandlet",
-            "LoadingPhase": "PostEngineInit"
-        }
+		{
+			"Name": "imasparql",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "cerealWrapper",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
     ]
 }

@@ -1,10 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "cereal/archives/json.hpp"
-#include "Math/TransformCalculus2D.h"	// For"cereal-UE4.hxx"
-#include "cereal-UE4.hxx"
 #include "imasparqlBP.h"
-
 
 void AimasparqlBP::GetIdolData(FString name) {
 	auto& http = FHttpModule::Get();
@@ -41,8 +37,7 @@ void AimasparqlBP::OnCompleteGetIdolData(FHttpRequestPtr req, FHttpResponsePtr r
 		FimasparqlResult result;
 		std::stringstream buf;
 		buf << TCHAR_TO_UTF8(*txt);
-		cereal::JSONInputArchive a(buf);
-		a(head, result);
+		createJSONInputArchive(buf, head, result);
 
 		FIdol idol(result);
 		OnGetIdolData(idol);
